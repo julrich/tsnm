@@ -4,7 +4,7 @@ This guide walks you through setting up a fresh instance of the kickstartDS Stor
 
 ## Prerequisites
 
-- **Node.js** ≥ 18
+- **Node.js** 24 (see `.nvmrc`; packages that declare `engines` require `>= 24.0.0`)
 - **pnpm** 10.30.3+ (`corepack enable && corepack prepare pnpm@10.30.3 --activate`)
 - A **Storyblok** account with a new, empty space
 - An **OpenAI** API key (optional — needed for Prompter / AI content generation)
@@ -16,8 +16,6 @@ pnpm install
 ```
 
 ## 2. Configure Environment Variables
-
-grep -A2 -B2 "create-component-previews" package.json && echo "===" && grep -A2 -B2 '"test"' package.json | head -20
 
 ### Local Development
 

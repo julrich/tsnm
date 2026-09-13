@@ -1,6 +1,8 @@
 # ruhmesmeile Storyblok Starter
 
-A **pnpm workspaces monorepo** for building AI-powered websites with [Storyblok CMS](https://www.storyblok.com/) and the [kickstartDS](https://www.kickstartds.com/) design system. Includes a Next.js website, a design system with 74+ React components, three MCP servers, a shared services library, an n8n community node, and two editor UIs.
+A **pnpm workspaces monorepo** for building AI-powered websites with [Storyblok CMS](https://www.storyblok.com/) and the [kickstartDS](https://www.kickstartds.com/) design system. Includes a Next.js website, a design system with 74+ React components, three MCP servers, a shared services library, an n8n community node, two editor UIs, three Storyblok field plugins, and a token-graph library.
+
+> **Working with an AI agent?** Start with [`AGENTS.md`](AGENTS.md) — canonical commands, invariants, generated files, destructive commands, and known defects. Package-local `AGENTS.md` files live in `packages/*/`.
 
 ## Monorepo Structure
 
@@ -15,21 +17,25 @@ packages/
   component-builder-mcp/  — MCP server (component-building instructions & templates)
   design-tokens-mcp/      — MCP server (design token querying, analysis, governance)
   design-tokens-editor/   — Browser-based Design Token WYSIWYG editor (Vite SPA + Express, Kamal/Docker)
-  schema-layer-editor/    — Schema Layer Editor (Vite SPA)
+  schema-layer-editor/    — Schema Layer Editor (Vite SPA + Express, Kamal/Docker)
+  token-graph/            — Token dependency graph visualization (sigma + graphology)
+  storyblok-*-field-plugin/ — 3 Storyblok field plugins (theme select, icon sprite, SharePoint folder)
+  umami-analytics/        — Umami analytics deployment (Dockerfile only, not a workspace package)
 ```
 
 | Package                                                  | npm                                      | Description                                                                     |
 | -------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------- |
-| [design-system](packages/design-system/)                 | `@kickstartds/design-system`             | 74+ React components, 5 themes, design tokens, Storybook, Playroom              |
+| [design-system](packages/design-system/)                 | `@kickstartds/design-system`             | 74+ React components, design tokens, Storybook, Playroom                        |
 | [website](packages/website/)                             | `@kickstartds/ruhmesmeile-storyblok-starter` | Next.js 13 site with Storyblok CMS, ISR, Visual Editor, AI Prompter             |
 | [storyblok-services](packages/storyblok-services/)       | `@kickstartds/storyblok-services`        | Shared library for schema preparation, validation, transforms, pattern analysis |
-| [storyblok-mcp](packages/storyblok-mcp/)                 | `@kickstartds/storyblok-mcp-server`      | MCP server exposing 30+ CMS tools to AI assistants                              |
-| [storyblok-n8n](packages/storyblok-n8n/)                 | `n8n-nodes-storyblok-kickstartds`        | n8n community node with 22 operations for automated content pipelines           |
-| [component-builder-mcp](packages/component-builder-mcp/) | `@kickstartds/component-builder-mcp`     | MCP server with 7 read-only tools for component development guidance            |
+| [storyblok-mcp](packages/storyblok-mcp/)                 | `@kickstartds/storyblok-mcp-server`      | MCP server exposing 32 CMS/tool operations to AI assistants                     |
+| [storyblok-n8n](packages/storyblok-n8n/)                 | `n8n-nodes-storyblok-kickstartds`        | n8n community node with 28 operations across 4 resources                        |
+| [component-builder-mcp](packages/component-builder-mcp/) | `@kickstartds/component-builder-mcp`     | MCP server with 10 read-only tools for component development guidance           |
 | [design-tokens-mcp](packages/design-tokens-mcp/)         | `@kickstartds/design-tokens-mcp`         | MCP server with 28 tools for token querying, analysis, and governance           |
-| [shared-auth](packages/shared-auth/)                     | `@kickstartds/shared-auth`               | Shared JWT authentication library (HS256 verification, revocation)              |
+| [shared-auth](packages/shared-auth/)                     | _(private)_                              | Shared JWT authentication library (HS256 verification, revocation)              |
 | [design-tokens-editor](packages/design-tokens-editor/)   | _(private)_                              | Browser-based visual token editor with live preview (Vite + Express)            |
-| [schema-layer-editor](packages/schema-layer-editor/)     | `@kickstartds/schema-layer-editor`       | Visual editor for JSON Schema layers (Vite SPA)                                 |
+| [schema-layer-editor](packages/schema-layer-editor/)     | _(private)_                              | Visual editor for JSON Schema layers (Vite SPA + Express)                       |
+| [token-graph](packages/token-graph/)                     | _(private)_                              | Token dependency graph rendering, built into the design system                  |
 
 **Package manager:** pnpm 10.30.3 · **Versioning:** [Changesets](https://github.com/changesets/changesets) for independent per-package publishing
 
@@ -131,7 +137,7 @@ See [packages/storyblok-services/README.md](packages/storyblok-services/README.m
 
 ### MCP Server
 
-A **Model Context Protocol server** that exposes 30+ CMS tools to AI assistants like Claude. Supports both local (stdio) and cloud (Streamable HTTP) transport.
+A **Model Context Protocol server** that exposes 32 CMS tools to AI assistants like Claude. Supports both local (stdio) and cloud (Streamable HTTP) transport.
 
 Key capabilities:
 
@@ -148,9 +154,9 @@ See [packages/storyblok-mcp/README.md](packages/storyblok-mcp/README.md) for set
 
 ### n8n Nodes
 
-An **n8n community node** package providing 22 operations across 3 resources (AI Content, Story, Space) for automated content pipelines — without an LLM intermediary.
+An **n8n community node** package providing 28 operations across 4 resources (AI Content, Story, Space, Theme) for automated content pipelines — without an LLM intermediary.
 
-Includes 9 workflow templates for content audit, blog autopilot, content migration, SEO fixes, and more.
+Includes 10 workflow templates for content audit, blog autopilot, content migration, SEO fixes, and more.
 
 See [packages/storyblok-n8n/README.md](packages/storyblok-n8n/README.md) for the full node reference.
 
@@ -161,9 +167,9 @@ The **core design system** providing 74+ React components, design tokens, JSON S
 Key features:
 
 - **74+ React components** with JSON Schema-driven props (forwardRef, Context-overridable)
-- **5 pre-built themes** — DS Agency, Business, NGO, Google, Telekom — compiled via Style Dictionary
+- **8 branding presets** (blizzard, burgundy, coffee, ember, granit, mint, neon, water) plus CMS-managed `token-theme` stories, compiled via Style Dictionary
 - **Three-layer token architecture** — Branding → Semantic → Component tokens
-- **Storybook 10** with a11y audits, design token display, MCP addon
+- **Storybook 10** with a11y audits, MCP addon, and theme toolbar
 - **Playroom** — Interactive component prototyping at 425/768/1440px
 - **Rollup build** — ES modules, CSS, JSON Schemas, token exports, icon sprite
 
@@ -171,25 +177,25 @@ See [packages/design-system/README.md](packages/design-system/README.md) for com
 
 ### Component Builder MCP
 
-A **read-only MCP server** providing component-building instructions and templates to AI assistants. Exposes 7 tools for scaffolding new kickstartDS components (JSON Schema, React, SCSS, client behavior, Storybook) and 3 browsable documentation resources.
+A **read-only MCP server** providing component-building instructions and templates to AI assistants. Exposes 10 tools for scaffolding new kickstartDS components (JSON Schema, React, SCSS, client behavior, Storybook, defaults, token architecture) and 3 browsable documentation resources.
 
 See [packages/component-builder-mcp/README.md](packages/component-builder-mcp/README.md) for tool reference.
 
 ### Design Tokens MCP
 
-An **MCP server for design token management** — 28 tools for querying, searching, analyzing, and updating CSS custom properties across 12 global + 50 component token files. Includes theme generation from images (vision) or CSS extraction, plus 3 guided workflow prompts.
+An **MCP server for design token management** — 28 tools for querying, searching, analyzing, and updating CSS custom properties across 13 global + 50 component token files. Includes theme generation from images (vision) or CSS extraction, plus 3 guided workflow prompts.
 
 See [packages/design-tokens-mcp/README.md](packages/design-tokens-mcp/README.md) for tool reference and token architecture.
 
 ### Design Tokens Editor
 
-A **browser-based visual token editor** (Vite SPA) for non-technical editors to modify design tokens with live preview. Built with React 19, MUI v7, and JSON Forms. Deployed on Netlify with Functions + Blobs for serverless persistence. Private package — not published to npm.
+A **browser-based visual token editor** (Vite SPA + Express) for non-technical editors to modify design tokens with live preview. Built with React 19, MUI v7, and JSON Forms; themes are stored as `token-theme` stories in Storyblok. Private package — not published to npm.
 
 See [packages/design-tokens-editor/README.md](packages/design-tokens-editor/README.md) for setup.
 
 ### Schema Layer Editor
 
-A **visual editor for JSON Schema layers** used to configure CMS field visibility and behavior per schema layer. Built with Vite.
+A **visual editor for JSON Schema layers** used to configure CMS field visibility and behavior per schema layer. Vite SPA + Express, driven by a CLI (`--schemas`, `--namespace`, `--layer`).
 
 See [packages/schema-layer-editor/README.md](packages/schema-layer-editor/README.md) for usage.
 
@@ -313,9 +319,13 @@ kamal deploy -d design-system
 
 Config: [config/deploy-design-system.yml](config/deploy-design-system.yml)
 
-### Design Tokens Editor (Netlify)
+### Design Tokens Editor (Kamal)
 
-Deployed on Netlify — see `packages/design-tokens-editor/netlify.toml` for build config.
+```bash
+kamal deploy -d design-tokens-editor
+```
+
+Config: [config/deploy-design-tokens-editor.yml](config/deploy-design-tokens-editor.yml) — Express serves the Vite SPA plus the `/api/tokens/*` and `/api/auth/*` routes on port 8080.
 
 ### Analytics (Kamal)
 
@@ -323,9 +333,7 @@ Deployed on Netlify — see `packages/design-tokens-editor/netlify.toml` for bui
 kamal deploy -d umami-analytics
 ```
 
-Config: [config/deploy-umami-analytics.yml](config/deploy-umami-analytics.yml)
-
-Endpoint: `https://mcp.your-domain.com/mcp`
+Config: [config/deploy-umami-analytics.yml](config/deploy-umami-analytics.yml) — Umami + a Postgres accessory on the same host.
 
 ## Contributing
 
