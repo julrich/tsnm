@@ -86,7 +86,7 @@ pnpm -r run build
 This seeds the empty space with components, presets, demo content, and asset uploads:
 
 ```bash
-pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter run init
+pnpm --filter personal-site run init
 ```
 
 What this does:
@@ -100,7 +100,7 @@ What this does:
 ## 6. Start Development
 
 ```bash
-pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter dev
+pnpm --filter personal-site dev
 ```
 
 The dev server starts with an SSL proxy on `https://localhost:3010`.
@@ -146,7 +146,7 @@ After regenerating, commit the updated files in `__snapshots__/` and `static/img
 After modifying JSON Schema layers, use the merge workflow to safely push changes:
 
 ```bash
-pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter run update-storyblok-config
+pnpm --filter personal-site run update-storyblok-config
 ```
 
 This runs: `create-storyblok-config` → `rename-generated-config` → `pull-content-schema` → `merge-storyblok-config` → `push-components`
@@ -198,13 +198,13 @@ Update domain and infra settings in these files for a new deployment target:
 
 ```bash
 # First-time setup
-kamal setup -d website
+kamal setup -c config/deploy-website.yml
 
 # Subsequent deploys
-kamal deploy -d website
+kamal deploy -c config/deploy-website.yml
 
 # MCP server
-kamal deploy -d storyblok-mcp
+kamal deploy -c config/deploy-storyblok-mcp.yml
 ```
 
 ---
@@ -218,5 +218,5 @@ For testing locally with a fresh Storyblok space, you only need:
    - `NEXT_STORYBLOK_OAUTH_TOKEN`
    - `NEXT_STORYBLOK_SPACE_ID`
 2. Run `storyblok login` (CLI auth)
-3. Run `pnpm -r run build && pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter run init`
-4. Run `pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter dev`
+3. Run `pnpm -r run build && pnpm --filter personal-site run init`
+4. Run `pnpm --filter personal-site dev`

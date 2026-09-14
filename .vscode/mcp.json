@@ -1,30 +1,11 @@
 {
   "servers": {
-    "Design System Storybook MCP": {
-      "url": "http://localhost:6006/mcp",
-      "type": "http"
-    },
-    "Design System Design Tokens MCP": {
-      "type": "streamable-http",
-      "url": "https://design-tokens-mcp.ruhmesmeile.com/mcp"
-    },
-    "Design System Component Builder MCP": {
-      "command": "node",
+    "personal-site-storyblok": {
+      "command": "bash",
       "args": [
-        "/home/julrich/Projects/kickstartDS/code/ds-agency-premium-mcp-demo/component-implementation-mcp/src/index.js"
+        "-c",
+        "cd /home/julrich/Projects/tsnm/code/tsnm/packages/website && [ -f ./.env.local ] && { set -a; . ./.env.local; set +a; }; STORYBLOK_API_TOKEN=\"$NEXT_STORYBLOK_API_TOKEN\" STORYBLOK_OAUTH_TOKEN=\"$NEXT_STORYBLOK_OAUTH_TOKEN\" STORYBLOK_SPACE_ID=\"$NEXT_STORYBLOK_SPACE_ID\" OPENAI_API_KEY=\"$NEXT_OPENAI_API_KEY\" exec /usr/bin/node ../storyblok-mcp/dist/index.js"
       ]
-    },
-    "ruhmesmeile Storyblok Starter MCP": {
-      "command": "node",
-      "args": [
-        "/home/julrich/Projects/kickstartDS/code/storyblok-starter-demo/mcp-server/dist/index.js"
-      ],
-      "env": {
-        "STORYBLOK_API_TOKEN": "ADDYOURS",
-        "STORYBLOK_OAUTH_TOKEN": "ADDYOURS",
-        "STORYBLOK_SPACE_ID": "ADDYOURS",
-        "OPENAI_API_KEY": "ADDYOURS"
-      }
     }
   },
   "inputs": []

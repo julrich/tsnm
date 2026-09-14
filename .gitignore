@@ -51,6 +51,8 @@ packages/website/cms/merged/
 packages/website/cms/components.generated.json
 packages/website/cms/presets.generated.json
 packages/website/cms/merge-report.json
+packages/website/cms/components.123456.json
+packages/website/cms/presets.123456.json
 packages/website/types/logs
 
 # kickstartDS

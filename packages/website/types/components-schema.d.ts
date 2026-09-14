@@ -113,16 +113,16 @@ export interface BlogTeaserStoryblok {
 
 export interface BusinessCardStoryblok {
   centered: boolean;
-  image_src?: MultilinkStoryblok;
+  image_src?: AssetStoryblok;
   image_alt?: string;
-  logo_src?: MultilinkStoryblok;
+  logo_src?: AssetStoryblok;
   logo_alt?: string;
   logo_url?: MultilinkStoryblok;
   topic?: string;
   address?: string;
-  avatar_src?: MultilinkStoryblok;
+  avatar_src?: AssetStoryblok;
   avatar_alt?: string;
-  contact?: ContactStoryblok[];
+  contactLinks?: ContactLinksStoryblok[];
   buttons?: ButtonsStoryblok[];
   _uid: string;
   component: "business-card";
@@ -154,11 +154,24 @@ export interface ComponentTypesStoryblok {
 }
 
 export interface ContactStoryblok {
+  image_src?: AssetStoryblok;
+  image_alt?: string;
+  image_fullWidth: boolean;
+  image_aspectRatio?: "" | "wide" | "square" | "vertical";
+  title?: string;
+  subtitle?: string;
+  links?: LinksStoryblok[];
+  copy?: string;
+  className?: string;
+  component: "contact";
+  _uid: string;
+}
+
+export interface ContactLinksStoryblok {
   label?: string;
-  icon?: string;
   url?: MultilinkStoryblok;
   _uid: string;
-  component: "contact";
+  component: "contactLinks";
 }
 
 export interface ContentNavStoryblok {
@@ -225,6 +238,7 @@ export interface DownloadStoryblok {
 
 export interface DownloadsStoryblok {
   download?: DownloadStoryblok[];
+  sharepointFolder?: string;
   _uid: string;
   component: "downloads";
 }
@@ -245,8 +259,8 @@ export interface EventDetailStoryblok {
 
 export interface EventFilterStoryblok {
   datePicker_title?: string;
-  "datePicker_tab-4d25ed9c-b100-404a-b7df-d9140557f8ad"?: unknown;
-  "datePicker_tab-47e8f094-9c31-4b0d-ac27-4097ad2cb926"?: unknown;
+  "datePicker_tab-9845e305-4b8c-40da-a7dc-550aed5fc55c"?: unknown;
+  "datePicker_tab-a444e6b5-0f02-407f-84b1-0a82454bac92"?: unknown;
   datePicker_toggle: boolean;
   categories_title?: string;
   categories_categoryCheckboxes?: CategoryCheckboxesStoryblok[];
@@ -331,16 +345,19 @@ export interface FooterStoryblok {
   logo_homepageHref?: MultilinkStoryblok;
   logo_width?: string;
   logo_height?: string;
-  byline?: string;
   inverted: boolean;
-  navItems?: NavItemsStoryblok[];
+  navGroups?: NavGroupsStoryblok[];
+  copyright?: string;
+  legalLink_label?: string;
+  legalLink_url?: MultilinkStoryblok;
+  socialLinks?: SocialLinksStoryblok[];
   _uid: string;
   component: "footer";
 }
 
 export interface GalleryStoryblok {
   images?: ImagesStoryblok[];
-  layout?: "" | "stack" | "smallTiles" | "largeTiles";
+  layout?: "" | "stack" | "smallTiles" | "largeTiles" | "slider";
   aspectRatio?: "" | "unset" | "square" | "wide" | "landscape";
   lightbox: boolean;
   _uid: string;
@@ -351,6 +368,7 @@ export interface GlobalStoryblok {
   global?: (
     | BlogTeaserStoryblok
     | BusinessCardStoryblok
+    | TabE9Adcc38E71E4C418Be01C42E04E0BadStoryblok
     | ContactStoryblok
     | ContentNavStoryblok
     | CtaStoryblok
@@ -378,7 +396,6 @@ export interface GlobalStoryblok {
     | VideoCurtainStoryblok
     | InfoTableStoryblok
     | PrompterStoryblok
-    | TimelineStoryblok
   )[];
   _uid: string;
   component: "global";
@@ -580,6 +597,13 @@ export interface MosaicStoryblok {
   component: "mosaic";
 }
 
+export interface NavGroupsStoryblok {
+  heading?: string;
+  items?: ItemsStoryblok[];
+  _uid: string;
+  component: "navGroups";
+}
+
 export interface NavItemsStoryblok {
   url?: MultilinkStoryblok;
   label?: string;
@@ -599,6 +623,7 @@ export interface PageStoryblok {
   token?: string;
   hidePageBreadcrumbs: boolean;
   seo?: SeoStoryblok[];
+  theme?: string;
   _uid: string;
   component: "page";
   uuid?: string;
@@ -697,6 +722,7 @@ export interface SectionStoryblok {
   components?: (
     | BlogTeaserStoryblok
     | BusinessCardStoryblok
+    | TabE9Adcc38E71E4C418Be01C42E04E0BadStoryblok
     | ContactStoryblok
     | ContentNavStoryblok
     | CtaStoryblok
@@ -724,11 +750,11 @@ export interface SectionStoryblok {
     | VideoCurtainStoryblok
     | InfoTableStoryblok
     | PrompterStoryblok
-    | TimelineStoryblok
     | GlobalReferenceStoryblok
   )[];
   buttons?: ButtonsStoryblok[];
   aiDraft: boolean;
+  anchorId?: string;
   _uid: string;
   component: "section";
 }
@@ -750,6 +776,10 @@ export interface SettingsStoryblok {
   iconSprite?: string;
   token?: string;
   hideBreadcrumbs: boolean;
+  theme?: string;
+  headerButton_enabled: boolean;
+  headerButton_label?: string;
+  headerButton_url?: MultilinkStoryblok;
   _uid: string;
   component: "settings";
 }
@@ -779,6 +809,14 @@ export interface SliderStoryblok {
   component: "slider";
 }
 
+export interface SocialLinksStoryblok {
+  icon?: string;
+  url?: MultilinkStoryblok;
+  ariaLabel?: string;
+  _uid: string;
+  component: "socialLinks";
+}
+
 export interface SocialSharingStoryblok {
   url?: MultilinkStoryblok;
   title?: string;
@@ -802,7 +840,7 @@ export interface SplitEvenStoryblok {
   firstComponents?: (
     | BlogTeaserStoryblok
     | BusinessCardStoryblok
-    | Tab3E667Fa3306841A0869DCb8B09EadaecStoryblok
+    | Tab3Ef3Bf02E22D4B97Aac7A7E69247688CStoryblok
     | ContactStoryblok
     | ContentNavStoryblok
     | CtaStoryblok
@@ -830,6 +868,7 @@ export interface SplitEvenStoryblok {
   secondComponents?: (
     | BlogTeaserStoryblok
     | BusinessCardStoryblok
+    | Tab1Dd56D17C1D649F5B32564Be24675882Storyblok
     | ContactStoryblok
     | ContentNavStoryblok
     | CtaStoryblok
@@ -840,6 +879,7 @@ export interface SplitEvenStoryblok {
     | FaqStoryblok
     | FeaturesStoryblok
     | GalleryStoryblok
+    | HeadlineStoryblok
     | HeroStoryblok
     | HtmlStoryblok
     | ImageStoryStoryblok
@@ -874,6 +914,7 @@ export interface SplitWeightedStoryblok {
   mainComponents?: (
     | BlogTeaserStoryblok
     | BusinessCardStoryblok
+    | TabCcb3807F02E14D09A644A14D685Bd30AStoryblok
     | ContactStoryblok
     | ContentNavStoryblok
     | CtaStoryblok
@@ -884,6 +925,7 @@ export interface SplitWeightedStoryblok {
     | FaqStoryblok
     | FeaturesStoryblok
     | GalleryStoryblok
+    | HeadlineStoryblok
     | HeroStoryblok
     | HtmlStoryblok
     | ImageStoryStoryblok
@@ -900,7 +942,7 @@ export interface SplitWeightedStoryblok {
   asideComponents?: (
     | BlogTeaserStoryblok
     | BusinessCardStoryblok
-    | TabD44F2B2754A248E4Bf6F97E1Aafe7570Storyblok
+    | Tab9D11Ce045A1D46E0A764Bee596C3E9F0Storyblok
     | ContactStoryblok
     | ContentNavStoryblok
     | CtaStoryblok
@@ -944,7 +986,7 @@ export interface StatsStoryblok {
   component: "stats";
 }
 
-export interface Tab2Ba8B3E51D90411E9110C976E680983FStoryblok {
+export interface Tab03569F915Ef444F586Bd845Cc951Df4EStoryblok {
   button_label?: string;
   button_url?: MultilinkStoryblok;
   button_variant?: "" | "primary" | "secondary" | "tertiary";
@@ -952,10 +994,10 @@ export interface Tab2Ba8B3E51D90411E9110C976E680983FStoryblok {
   button_disabled: boolean;
   button_type?: "" | "button" | "submit" | "reset";
   _uid: string;
-  component: "tab-2ba8b3e5-1d90-411e-9110-c976e680983f";
+  component: "tab-03569f91-5ef4-44f5-86bd-845cc951df4e";
 }
 
-export interface Tab3E667Fa3306841A0869DCb8B09EadaecStoryblok {
+export interface Tab124571D0Ddc74FcdA5A719Cb17B00085Storyblok {
   button_label?: string;
   button_url?: MultilinkStoryblok;
   button_variant?: "" | "primary" | "secondary" | "tertiary";
@@ -963,10 +1005,10 @@ export interface Tab3E667Fa3306841A0869DCb8B09EadaecStoryblok {
   button_disabled: boolean;
   button_type?: "" | "button" | "submit" | "reset";
   _uid: string;
-  component: "tab-3e667fa3-3068-41a0-869d-cb8b09eadaec";
+  component: "tab-124571d0-ddc7-4fcd-a5a7-19cb17b00085";
 }
 
-export interface Tab62E98D1F7D8147B0B8EaD0F9F992Fa93Storyblok {
+export interface Tab1D716Ded384D43FfB9AeDdde7E96E210Storyblok {
   button_label?: string;
   button_url?: MultilinkStoryblok;
   button_variant?: "" | "primary" | "secondary" | "tertiary";
@@ -974,10 +1016,10 @@ export interface Tab62E98D1F7D8147B0B8EaD0F9F992Fa93Storyblok {
   button_disabled: boolean;
   button_type?: "" | "button" | "submit" | "reset";
   _uid: string;
-  component: "tab-62e98d1f-7d81-47b0-b8ea-d0f9f992fa93";
+  component: "tab-1d716ded-384d-43ff-b9ae-ddde7e96e210";
 }
 
-export interface TabD44F2B2754A248E4Bf6F97E1Aafe7570Storyblok {
+export interface Tab1Dd56D17C1D649F5B32564Be24675882Storyblok {
   button_label?: string;
   button_url?: MultilinkStoryblok;
   button_variant?: "" | "primary" | "secondary" | "tertiary";
@@ -985,10 +1027,10 @@ export interface TabD44F2B2754A248E4Bf6F97E1Aafe7570Storyblok {
   button_disabled: boolean;
   button_type?: "" | "button" | "submit" | "reset";
   _uid: string;
-  component: "tab-d44f2b27-54a2-48e4-bf6f-97e1aafe7570";
+  component: "tab-1dd56d17-c1d6-49f5-b325-64be24675882";
 }
 
-export interface TabDd9Fb6134B494262Bebe665E6333Fcd1Storyblok {
+export interface Tab3Ef3Bf02E22D4B97Aac7A7E69247688CStoryblok {
   button_label?: string;
   button_url?: MultilinkStoryblok;
   button_variant?: "" | "primary" | "secondary" | "tertiary";
@@ -996,10 +1038,10 @@ export interface TabDd9Fb6134B494262Bebe665E6333Fcd1Storyblok {
   button_disabled: boolean;
   button_type?: "" | "button" | "submit" | "reset";
   _uid: string;
-  component: "tab-dd9fb613-4b49-4262-bebe-665e6333fcd1";
+  component: "tab-3ef3bf02-e22d-4b97-aac7-a7e69247688c";
 }
 
-export interface TabFad75E0F1C794F01B0D6A3C93A0Dc934Storyblok {
+export interface Tab4A39D458E64241Dd86553A14Ec3C9200Storyblok {
   button_label?: string;
   button_url?: MultilinkStoryblok;
   button_variant?: "" | "primary" | "secondary" | "tertiary";
@@ -1007,7 +1049,161 @@ export interface TabFad75E0F1C794F01B0D6A3C93A0Dc934Storyblok {
   button_disabled: boolean;
   button_type?: "" | "button" | "submit" | "reset";
   _uid: string;
-  component: "tab-fad75e0f-1c79-4f01-b0d6-a3c93a0dc934";
+  component: "tab-4a39d458-e642-41dd-8655-3a14ec3c9200";
+}
+
+export interface Tab653A52Ea71764B03B59EE16C54Dd9479Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-653a52ea-7176-4b03-b59e-e16c54dd9479";
+}
+
+export interface Tab76301A8D4Cba46C388C5Df5Eab2E1450Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-76301a8d-4cba-46c3-88c5-df5eab2e1450";
+}
+
+export interface Tab76A4E6Bd11514Bf086810864E9711294Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-76a4e6bd-1151-4bf0-8681-0864e9711294";
+}
+
+export interface Tab80D7600F78Bd484DA5063A4D6589CffcStoryblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-80d7600f-78bd-484d-a506-3a4d6589cffc";
+}
+
+export interface Tab87939Cb29Fe2473FAb1CBfe6Ab9E5391Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-87939cb2-9fe2-473f-ab1c-bfe6ab9e5391";
+}
+
+export interface Tab89A9Cf3F225B4Fa7968C80446Ad53932Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-89a9cf3f-225b-4fa7-968c-80446ad53932";
+}
+
+export interface Tab9Cfb8F2C01744BccA44B617A9827Cd83Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-9cfb8f2c-0174-4bcc-a44b-617a9827cd83";
+}
+
+export interface Tab9D11Ce045A1D46E0A764Bee596C3E9F0Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-9d11ce04-5a1d-46e0-a764-bee596c3e9f0";
+}
+
+export interface TabA89Ded3500D24D8CAaaa8678F8D0C5CaStoryblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-a89ded35-00d2-4d8c-aaaa-8678f8d0c5ca";
+}
+
+export interface TabB0C2886DBedb4534Bc66317A1D1691A3Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-b0c2886d-bedb-4534-bc66-317a1d1691a3";
+}
+
+export interface TabC0858FedBbb4402E9Ab9C58A6C2Dda73Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-c0858fed-bbb4-402e-9ab9-c58a6c2dda73";
+}
+
+export interface TabCcb3807F02E14D09A644A14D685Bd30AStoryblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-ccb3807f-02e1-4d09-a644-a14d685bd30a";
+}
+
+export interface TabE9Adcc38E71E4C418Be01C42E04E0BadStoryblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-e9adcc38-e71e-4c41-8be0-1c42e04e0bad";
+}
+
+export interface TabEaf8A1Cd33Fe4C59A838C6Bbc6Cde372Storyblok {
+  button_label?: string;
+  button_url?: MultilinkStoryblok;
+  button_variant?: "" | "primary" | "secondary" | "tertiary";
+  button_size?: "" | "small" | "medium" | "large";
+  button_disabled: boolean;
+  button_type?: "" | "button" | "submit" | "reset";
+  _uid: string;
+  component: "tab-eaf8a1cd-33fe-4c59-a838-c6bbc6cde372";
 }
 
 export interface TagsStoryblok {
@@ -1029,6 +1225,7 @@ export interface TeaserCardStoryblok {
   image?: AssetStoryblok;
   imageAlt?: string;
   imageRatio?: "" | "wide" | "landscape" | "square" | "unset";
+  imageHoverEffect: boolean;
   _uid: string;
   component: "teaser-card";
 }
@@ -1077,26 +1274,11 @@ export interface TileStoryblok {
   component: "tile";
 }
 
-export interface TimelineStoryblok {
-  timelineItems?: TimelineItemsStoryblok[];
-  _uid: string;
-  component: "timeline";
-}
-
-export interface TimelineItemsStoryblok {
-  year?: string;
-  textLeft?: string;
-  textRight?: string;
-  image_src?: AssetStoryblok;
-  image_alt?: string;
-  _uid: string;
-  component: "timelineItems";
-}
-
 export interface TokenThemeStoryblok {
   name: string;
   tokens?: string;
   css?: string;
+  system: boolean;
   _uid: string;
   component: "token-theme";
 }

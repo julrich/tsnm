@@ -1,0 +1,107 @@
+@use "./track-teaser-box-tokens.scss";
+
+.dsa-track-teaser-box {
+  width: var(--dsa-track-teaser-box--width);
+  height: var(--dsa-track-teaser-box--height);
+  perspective: 1000px;
+}
+
+.dsa-track-teaser-box__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--dsa-track-teaser-box--flip-duration);
+}
+
+.dsa-track-teaser-box[data-flipped] .dsa-track-teaser-box__inner {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dsa-track-teaser-box__inner {
+    transition: none;
+  }
+}
+
+.dsa-track-teaser-box__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dsa-track-teaser-box--gap);
+  padding: var(--dsa-track-teaser-box--padding);
+  overflow: hidden;
+  color: var(--dsa-track-teaser-box--color);
+  background-color: var(--dsa-track-teaser-box--background-color);
+  border-radius: var(--dsa-track-teaser-box--border-radius);
+  box-shadow: var(--dsa-track-teaser-box--box-shadow);
+  backface-visibility: hidden;
+}
+
+.dsa-track-teaser-box__face--back {
+  justify-content: center;
+  transform: rotateY(180deg);
+}
+
+.dsa-track-teaser-box__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: var(--ks-border-radius-card);
+}
+
+.dsa-track-teaser-box__body {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--dsa-track-teaser-box--gap) / 2);
+  margin-block-start: auto;
+}
+
+.dsa-track-teaser-box__topic,
+.dsa-track-teaser-box__text,
+.dsa-track-teaser-box__link {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.dsa-track-teaser-box__topic {
+  font: var(--dsa-track-teaser-box--topic-font);
+  font-weight: var(--dsa-track-teaser-box--topic-weight);
+}
+
+.dsa-track-teaser-box__text {
+  font: var(--dsa-track-teaser-box--text-font);
+}
+
+.dsa-track-teaser-box__flip {
+  padding: 0;
+  font: var(--dsa-track-teaser-box--text-font);
+  font-weight: var(--dsa-track-teaser-box--topic-weight);
+  color: var(--ks-color-link);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  text-align: start;
+}
+
+.dsa-track-teaser-box__flip:hover,
+.dsa-track-teaser-box__flip:focus-visible {
+  color: var(--ks-color-link-hover);
+  text-decoration: underline;
+}
+
+.dsa-track-teaser-box__audio {
+  width: 100%;
+  height: 2rem;
+  accent-color: var(--ks-color-primary);
+}
+
+.dsa-track-teaser-box__link {
+  font: var(--dsa-track-teaser-box--text-font);
+  color: var(--ks-color-link);
+}
+
+.dsa-track-teaser-box__link:hover {
+  color: var(--ks-color-link-hover);
+}

@@ -7,7 +7,7 @@ import "./manager.css";
 const ADDON_ID = "kickstartds/theme-switcher";
 const TOOL_ID = `${ADDON_ID}/tool`;
 
-addons.setConfig({ theme: light });
+addons.setConfig({ theme: light, brandTarget: "_blank" });
 
 const INVERTED_TOOL_ID = `${ADDON_ID}/inverted-tool`;
 

@@ -42,7 +42,7 @@ Storyblok CMS ──► storyblok-services (schema, transform, validate, generat
 
 | Directory | Package name | Published | Purpose |
 | --- | --- | --- | --- |
-| `packages/website` | `@kickstartds/ruhmesmeile-storyblok-starter` | changeset-ignored | Next.js 13.5.6 site (pages router, React 19), ISR, Visual Editor, Prompter |
+| `packages/website` | `personal-site` | changeset-ignored | Next.js 13.5.6 site (pages router, React 19), ISR, Visual Editor, Prompter |
 | `packages/design-system` | `@kickstartds/design-system` | yes | 72 component dirs + 6 CMS page components, tokens, Storybook 10, Playroom |
 | `packages/storyblok-services` | `@kickstartds/storyblok-services` | yes | Schema prep, transforms, validation, patterns, guidance, plan/generate, assets, themes |
 | `packages/storyblok-mcp` | `@kickstartds/storyblok-mcp-server` | yes | MCP server: 32 tools + 7 app-only tools, 4+ dynamic resources, 7 prompts |
@@ -67,15 +67,15 @@ pnpm -r run build      # topological; required before first dev run
 
 Website environment: copy `packages/website/.env.local.sample` → `.env.local`. Required: `NEXT_STORYBLOK_API_TOKEN`, `NEXT_STORYBLOK_OAUTH_TOKEN`, `NEXT_STORYBLOK_SPACE_ID`. AI features need `NEXT_OPENAI_API_KEY`; Markdown endpoints need `NEXT_PUBLIC_SITE_URL`. Committed `packages/website/.env` holds `NEXT_PUBLIC_*` domains, Docker image names, and `HOSTING_SERVER_IP`. Scripts wrapped in `dotenvx run -f .env.local` fail without it.
 
-Storyblok CLI requires a one-time `pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter storyblok-login`.
+Storyblok CLI requires a one-time `pnpm --filter personal-site storyblok-login`.
 
 ## Commands
 
-**pnpm filter selectors must be full package names or paths.** Bare directory names do **not** resolve (`pnpm --filter website …` → "No projects matched the filters"); some root aliases in `package.json` are still broken this way (`dev:web`, `dev:mcp`, `layer-editor`). Working forms:
+**pnpm filter selectors must be full package names or paths.** Bare directory names do **not** resolve (`pnpm --filter website …` → "No projects matched the filters"). The website package is `personal-site`; the MCP server is `@kickstartds/storyblok-mcp-server`. Working forms:
 
 ```bash
 # Dev servers
-pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter dev   # Next :3000 + SSL proxy :3010
+pnpm --filter personal-site dev   # Next :3000 + SSL proxy :3010
 pnpm --filter ./packages/website dev                           # equivalent
 pnpm --filter @kickstartds/design-system storybook             # Storybook :6006
 pnpm --filter @kickstartds/design-system playroom              # Playroom :9000
@@ -95,6 +95,18 @@ pnpm -r run lint
 pnpm changeset && pnpm version-packages && pnpm publish-packages
 ```
 
+**Before the first `dev` run**, generate the token/asset artifacts — they are produced by `build`, not by `dev`, and the app otherwise fails to compile with `Can't resolve '@/token/calculated'`:
+
+```bash
+pnpm --filter personal-site build-tokens
+pnpm --filter personal-site sync-default-theme   # also upserts the Storyblok default theme
+pnpm --filter personal-site extract-tokens
+pnpm --filter personal-site blurhashes
+pnpm --filter personal-site bundle-static-assets
+```
+
+Note `pnpm --filter personal-site init` hits pnpm's own built-in `init` — the seed script needs `pnpm --filter personal-site run init`.
+
 Full per-package command sets: `packages/*/package.json` and [packages/website/AGENTS.md](packages/website/AGENTS.md).
 
 ## Architecture invariants
@@ -110,12 +122,13 @@ These hold across packages; violating them produces invalid CMS content or broke
 7. **Validation + compositional warnings run on every write tool**; `skipValidation: true` is the only escape hatch.
 8. **Auth is opt-in and shared.** `MCP_JWT_SECRET` unset ⇒ auth disabled (local dev). One secret, one revocation list (`MCP_REVOKED_TOKENS`). Never add a per-service auth mechanism.
 9. **Never push unmerged generated CMS config.** Always regenerate → merge → push (see [docs/adr/adr-storyblok-config-merge.md](docs/adr/adr-storyblok-config-merge.md)).
+10. **`storyProcessing` flattens asset and link fields.** Before any component sees them, `packages/website/helpers/storyblok.ts` rewrites asset objects into plain CDN URL strings (except inside `seo` components) and multilinks into plain URL strings. A new component must therefore accept `image` as a **string** (`src={image}`), not `image.filename`, and read links as strings — even though the JSON Schema declares them as assets/URIs and the CMS API returns objects. `media` sub-fields also get their `alt` copied onto a sibling `alt` key when the component has one.
 
 ## Generated files — never hand-edit
 
 | Artifact | Regenerate with |
 | --- | --- |
-| `packages/website/cms/{components,presets}.generated.json`, `cms/merged/`, `cms/merge-report.json` | `pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter create-storyblok-config` / `… update-storyblok-config` |
+| `packages/website/cms/{components,presets}.123456.json`, `cms/{components,presets}.generated.json`, `cms/merged/`, `cms/merge-report.json` | `pnpm --filter personal-site create-storyblok-config` / `… update-storyblok-config` |
 | `packages/website/types/components.*.json` | `… pull-content-schema` |
 | `packages/website/types/components-schema.d.ts` | `… generate-content-types` |
 | `packages/website/token/{tokens.css,tokens.js,components.js,calculated.js,InlineIcon.tsx,storybook/}` | `… build-tokens` / `… extract-tokens` |
@@ -126,7 +139,7 @@ These hold across packages; violating them produces invalid CMS content or broke
 
 ## Destructive commands — confirm before running
 
-- `pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter init` → `packages/website/scripts/prepareProject.js`: **deletes stories, components, and asset folders in the live Storyblok space**, uploads presets. Fresh spaces only (it exits if a default "Home" story exists).
+- `pnpm --filter personal-site init` → `packages/website/scripts/prepareProject.js`: **deletes stories, components, and asset folders in the live Storyblok space**, uploads presets. Fresh spaces only (it exits if a default "Home" story exists).
 - `update-storyblok-config`, `push-components`, `push-component` → write the live CMS schema.
 - `generate-content-types` → pulls live schema, overwrites `types/`.
 - `sync-default-theme` → writes the default `token-theme` story.
@@ -152,18 +165,22 @@ CI (`.github/workflows/ci.yml`) runs `install --frozen-lockfile` → `-r build` 
 
 Kamal, one config per service (`config/deploy-*.yml`), shared secrets in `.kamal/secrets`. There is no default `config/deploy.yml`.
 
+**Use `-c`, not `-d`.** Kamal 2 destinations resolve `config/deploy.<destination>.yml`, so the legacy hyphenated filenames in this repo are *not* found by `kamal deploy -d website` (it fails with "Configuration file not found in config/deploy.yml"). Always pass the file explicitly: `kamal deploy -c config/deploy-website.yml`.
+
 | Command | Service | Domain env var | Port | Dockerfile |
 | --- | --- | --- | --- | --- |
-| `kamal deploy -d website` | `server` | `NEXT_PUBLIC_PRIMARY_PUBLIC_SITE_DOMAIN` | 3030 | `packages/website/Dockerfile` |
-| `kamal deploy -d storyblok-mcp` | MCP | `MCP_PUBLIC_DOMAIN` | 8080 | `packages/storyblok-mcp/Dockerfile` |
-| `kamal deploy -d design-tokens-mcp` | MCP | `DESIGN_TOKENS_MCP_PUBLIC_DOMAIN` | 8080 | `packages/design-tokens-mcp/Dockerfile` |
-| `kamal deploy -d component-builder-mcp` | MCP | `COMPONENT_BUILDER_MCP_PUBLIC_DOMAIN` | 8080 | `packages/component-builder-mcp/Dockerfile` |
-| `kamal deploy -d design-tokens-editor` | editor | `DESIGN_TOKENS_EDITOR_PUBLIC_DOMAIN` | 8080 | `packages/design-tokens-editor/Dockerfile` |
-| `kamal deploy -d schema-layer-editor` | editor | `SCHEMA_LAYER_EDITOR_PUBLIC_DOMAIN` | 8080 | `packages/schema-layer-editor/Dockerfile` |
-| `kamal deploy -d design-system` | Storybook | `STORYBOOK_PUBLIC_DOMAIN` | 8080 | `packages/design-system/Dockerfile` |
-| `kamal deploy -d umami-analytics` | `analytics` | `NEXT_PUBLIC_ANALYTICS_DOMAIN` | 3000 | `packages/umami-analytics/Dockerfile` |
+| `kamal deploy -c config/deploy-website.yml` | `server` | `NEXT_PUBLIC_PRIMARY_PUBLIC_SITE_DOMAIN` | 3030 | `packages/website/Dockerfile` |
+| `kamal deploy -c config/deploy-storyblok-mcp.yml` | MCP | `MCP_PUBLIC_DOMAIN` | 8080 | `packages/storyblok-mcp/Dockerfile` |
+| `kamal deploy -c config/deploy-design-tokens-mcp.yml` | MCP | `DESIGN_TOKENS_MCP_PUBLIC_DOMAIN` | 8080 | `packages/design-tokens-mcp/Dockerfile` |
+| `kamal deploy -c config/deploy-component-builder-mcp.yml` | MCP | `COMPONENT_BUILDER_MCP_PUBLIC_DOMAIN` | 8080 | `packages/component-builder-mcp/Dockerfile` |
+| `kamal deploy -c config/deploy-design-tokens-editor.yml` | editor | `DESIGN_TOKENS_EDITOR_PUBLIC_DOMAIN` | 8080 | `packages/design-tokens-editor/Dockerfile` |
+| `kamal deploy -c config/deploy-schema-layer-editor.yml` | editor | `SCHEMA_LAYER_EDITOR_PUBLIC_DOMAIN` | 8080 | `packages/schema-layer-editor/Dockerfile` |
+| `kamal deploy -c config/deploy-design-system.yml` | Storybook | `STORYBOOK_PUBLIC_DOMAIN` | 8080 | `packages/design-system/Dockerfile` |
+| `kamal deploy -c config/deploy-umami-analytics.yml` | `analytics` | `NEXT_PUBLIC_ANALYTICS_DOMAIN` | 3000 | `packages/umami-analytics/Dockerfile` |
 
 Dockerfiles build workspace dependencies (shared-auth, storyblok-services, design-system) first and then re-run `pnpm install` to re-inject `dist` — `injectWorkspacePackages` snapshots workspace output at install time.
+
+**Same rule locally:** after building a workspace package, re-run `pnpm install` before any tool that resolves it through `node_modules` — notably the website's `kickstartDS schema …` / `cms storyblok` scripts (`create-storyblok-config`, `generate-props`, `dereference-schemas`, `update-storyblok-config`). Otherwise `packages/website/node_modules/@kickstartds/design-system/dist/` does not exist yet and they fail with `Couldn't find a reffed json in json allOf graph generation`. Order: **build design-system → `pnpm install` → schema/CMS tooling → website build.**
 
 ### Local ports
 
@@ -181,22 +198,22 @@ Dockerfiles build workspace dependencies (shared-auth, storyblok-services, desig
 
 ## Known defects (documented, not fixed)
 
-1. Root aliases `dev:web`, `dev:mcp`, `layer-editor` use bare pnpm filters and fail; `dev:design-system`, `dev:tokens-editor`, `dev:component-mcp`, `dev:tokens-mcp` are correct.
-2. `packages/storyblok-mcp/test/prompts.test.ts` expects 6 prompts; source defines 7.
-3. `pnpm -r run test` / `pnpm -r run lint` cannot pass (placeholder scripts, missing eslint setup, snapshot build prerequisite).
-4. CI pins Node 20 while `.nvmrc` and package `engines` require Node 24.
-5. CircleCI job references a non-existent default Kamal config.
-6. `packages/design-tokens-mcp/docker-compose.yml` sets `PORT=3000` while the server reads `MCP_PORT` (8080); its healthcheck targets the wrong port.
-7. `.vscode/mcp.json` points two MCP servers at absolute paths in other checkouts; update before relying on it.
-8. `packages/design-tokens-editor/README.md` claims Netlify Functions/Blobs deployment; the real deployment is Express + Kamal.
-9. `packages/schema-layer-editor/src/cli.ts` ignores `SCHEMA_LAYER_NAMESPACE`/`SCHEMA_LAYER_PORT`; the Dockerfile hardcodes them.
+1. `packages/storyblok-mcp/test/prompts.test.ts` expects 6 prompts; source defines 7.
+2. `pnpm -r run test` / `pnpm -r run lint` cannot pass (placeholder scripts, missing eslint setup, snapshot build prerequisite).
+3. CI pins Node 20 while `.nvmrc` and package `engines` require Node 24.
+4. CircleCI job references a non-existent default Kamal config.
+5. `packages/design-tokens-mcp/docker-compose.yml` sets `PORT=3000` while the server reads `MCP_PORT` (8080); its healthcheck targets the wrong port.
+6. `packages/design-tokens-editor/README.md` claims Netlify Functions/Blobs deployment; the real deployment is Express + Kamal.
+7. `packages/schema-layer-editor/src/cli.ts` ignores `SCHEMA_LAYER_NAMESPACE`/`SCHEMA_LAYER_PORT`; the Dockerfile hardcodes them.
+
+Fixed in this fork: the root `dev:web`, `dev:mcp`, `layer-editor` aliases pointed at non-existent pnpm filters; they now use full package names. `.vscode/mcp.json` no longer points at another checkout — it starts the local `storyblok-mcp` build and reads credentials from `packages/website/.env.local` at launch.
 
 ## Adopting this starter for a new site
 
 1. **Storyblok**: create an empty space, note the Preview API token, personal access token, and space ID; run `storyblok-login` (region `eu` by default, `STORYBLOK_REGION`).
 2. **Branding**: edit `packages/website/token/dictionary/*` (semantic tokens) and `packages/website/token/branding-token.json` (branding layer); the design-system also ships 8 branding presets (`src/token/branding-tokens-{blizzard,burgundy,coffee,ember,granit,mint,neon,water}.json`). Rebuild tokens and `sync-default-theme`.
 3. **Domains/infra**: `packages/website/.env` (`NEXT_PUBLIC_PRIMARY/SECONDARY_PUBLIC_SITE_DOMAIN`, `NEXT_PUBLIC_ANALYTICS_*`, `DOCKER_SITE_IMAGE_NAME`, `HOSTING_SERVER_IP`) and the domain/image env vars in each `config/deploy-*.yml`.
-4. **Package names**: rename `@kickstartds/ruhmesmeile-storyblok-starter` (and Storyblok MCP/image names) if you publish or deploy under your own scope; update root aliases and `.changeset/config.json` `ignore` list together.
+4. **Package names**: rename `personal-site` (and Storyblok MCP/image names) if you publish or deploy under your own scope; update root aliases and `.changeset/config.json` `ignore` list together.
 5. **Components**: add site-specific components under `packages/website/components/<name>/`, register them in `components/index.tsx`, extend `components/section/section.schema.json`, add the schema to the `create-storyblok-config` list in `packages/website/package.json`, then run `update-storyblok-config` + `generate-content-types`.
-6. **Seed content**: `pnpm --filter @kickstartds/ruhmesmeile-storyblok-starter init` (fresh spaces only).
-7. **Cleanup for your fork**: `docs/internal/marketing`, `docs/internal/data` (Hannover Messe / Falkenberg demo assets), and `packages/website/components/{book-a-demo,info-table}` are demo-specific.
+6. **Seed content**: `pnpm --filter personal-site init` (fresh spaces only).
+7. **Cleanup for your fork**: `docs/internal/marketing` and `docs/internal/data` (Hannover Messe / Falkenberg demo assets) are demo-specific. The Book-a-Demo CTA, German CMS labels and the visibility overlay layer were already removed in this fork.

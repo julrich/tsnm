@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://cms.mydesignsystem.com/track-teaser-box.schema.json",
+  "title": "Track Teaser Box",
+  "description": "Flip card presenting a track: cover and topic on the front, audio player on the back",
+  "type": "object",
+  "properties": {
+    "topic": {
+      "title": "Topic",
+      "description": "Track title or topic shown on both sides",
+      "type": "string",
+      "maxLength": 90
+    },
+    "text": {
+      "title": "Text",
+      "description": "Artist or short description",
+      "type": "string",
+      "maxLength": 90
+    },
+    "image": {
+      "title": "Image",
+      "description": "Cover artwork shown on the front of the card",
+      "type": "string",
+      "format": "image"
+    },
+    "alt": {
+      "title": "Alternative text",
+      "description": "Alt text for the cover; falls back to the asset's own alt text",
+      "type": "string"
+    },
+    "preview": {
+      "title": "Preview URL",
+      "description": "URL of the audio file to play on the back (Storyblok CDN URL or an external preview link)",
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "additionalProperties": false
+}

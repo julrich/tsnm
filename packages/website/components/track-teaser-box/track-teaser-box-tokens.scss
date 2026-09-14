@@ -1,0 +1,14 @@
+:root {
+  --dsa-track-teaser-box--width: 200px;
+  --dsa-track-teaser-box--height: 280px;
+  --dsa-track-teaser-box--border-radius: var(--ks-border-radius-card);
+  --dsa-track-teaser-box--background-color: var(--ks-background-color-default);
+  --dsa-track-teaser-box--color: var(--ks-text-color-default);
+  --dsa-track-teaser-box--padding: var(--ks-spacing-s);
+  --dsa-track-teaser-box--gap: var(--ks-spacing-xs);
+  --dsa-track-teaser-box--topic-font: var(--ks-font-copy-m);
+  --dsa-track-teaser-box--topic-weight: var(--ks-font-weight-bold);
+  --dsa-track-teaser-box--text-font: var(--ks-font-copy-s);
+  --dsa-track-teaser-box--flip-duration: 0.5s;
+  --dsa-track-teaser-box--box-shadow: var(--ks-box-shadow-surface);
+}

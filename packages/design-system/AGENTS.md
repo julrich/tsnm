@@ -37,6 +37,23 @@ pnpm --filter @kickstartds/design-system typecheck
 - Storybook stories drive everything downstream: presets, screenshots, Playroom inputs, and CMS previews. Adding/renaming a story requires `build-storybook` + `create-component-previews` and committing LFS PNGs in both `__snapshots__/` and `static/img/screenshots/`.
 - Never hand-edit generated output: `dist/`, `src/types`, `src/token/token-graph.json`, `component-token-catalog.json`, `semantic-token-catalog.json`, `snippets.json`, `components.ts`, `static/pagefind`.
 
+## Hosted Storybook
+
+The built Storybook is deployed to **https://ds.tsnm.de** (nginx serving `storybook-static` on port 8080, TLS via Let's Encrypt, 211 entries = 158 stories + 53 docs).
+
+```bash
+set -a && . packages/website/.env.sh && . packages/design-system/.env.sh && set +a
+kamal deploy -c config/deploy-design-system.yml     # or `kamal setup` on a fresh host
+```
+
+- `packages/design-system/.env` (gitignored) holds `DOCKER_STORYBOOK_IMAGE_NAME`, `DOCKER_USERNAME`, `HOSTING_SERVER_IP`, `STORYBOOK_PUBLIC_DOMAIN`; `.env.sh` (gitignored **and** dockerignored) adds `STORYBLOK_API_TOKEN`. The token is a **build arg** — Vite bakes it in so the theme toolbar can fetch `token-theme` stories from the Storyblok CDN; without it only the local branding presets appear.
+- `KAMAL_REGISTRY_PASSWORD` comes from `packages/website/.env.sh` — source both files, or the deploy fails at `docker login` with `flag needs an argument: 'p' in -p`.
+- The image builds Storybook itself (`pnpm run build-storybook`: tokens → schema → token extraction → Pagefind `search` → `copy-theme-css` → `storybook build`), so no host-side `dist/` is required — unlike the website and editor images.
+- Gotcha fixed here: the container `HEALTHCHECK` used `http://localhost:8080/`, which resolved to `::1` while nginx listens on IPv4 only, so the container permanently reported `unhealthy` even though it served fine. It now checks `127.0.0.1`.
+- `/favicon.ico` is a 404 (the icons live under `/favicon/`, e.g. `/favicon/favicon.ico`); Storybook has no root favicon link.
+- **Branding and default theme.** The sidebar logo/title/link come from the **manager theme object in `.storybook/themes.ts`** (`brandTitle`, `brandUrl`, `brandImage`) — *not* from `addons.setConfig` in `manager.tsx`, which only carries `theme` and `brandTarget`. The logo file is `static/tsnm-logo.png`; the favicon set is `static/favicon/` (referenced by `.storybook/manager-head.html`, served at `/favicon/…`). Storybook opens on the **TSNM** theme via `initialGlobals.theme = "tsnm"` in `.storybook/preview.tsx`, which maps to the static preset `/tokens/branding-tokens-tsnm.css` (`STATIC_THEME_FILES`) and is listed first in `.storybook/ThemeTool.tsx` with its swatch colours.
+- **The TSNM palette exists twice on purpose:** `src/token/branding-tokens-tsnm.json` (DS preset → Storybook, offline, deterministic) and the Storyblok `token-theme` story `settings/themes/tsnm` (what the website renders). They were derived from one another and currently hold identical values — change both, or promote the DS preset to the default (`src/token/branding-tokens.json`) if you want a single source (that re-captures every screenshot baseline).
+
 ## Gotchas
 
 - Pinned upstream forks are patched via `/patches` (`@kickstartds/base`, `@kickstartds/jsonschema-utils`, `kickstartds@3.5.0--canary.62.324.0`, `storybook@10.2.15`, `storybook-addon-playroom`, `@glidejs/glide`). Bumping any of these requires renaming the patch file **and** the `pnpm.patchedDependencies` key in the root `package.json`.

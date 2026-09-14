@@ -37,6 +37,16 @@ const STATIC_THEMES: Array<{
   colors: ThemeColors;
 }> = [
   {
+    value: "tsnm",
+    label: "TSNM",
+    colors: {
+      primary: "#4bfe4a",
+      fg: "#021605",
+      bg: "#d3ffd7",
+      bgInverted: "#050505",
+    },
+  },
+  {
     value: "blizzard",
     label: "Blizzard",
     colors: {

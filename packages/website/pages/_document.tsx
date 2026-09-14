@@ -6,6 +6,50 @@ import Document, {
   DocumentContext,
 } from "next/document";
 
+/**
+ * Generic CSS families and OS font stacks are never loaded from Google Fonts.
+ * Hyphens are part of the captured name so `system-ui` is matched whole instead
+ * of being truncated to `system`.
+ */
+const SYSTEM_FAMILIES: Record<string, true> = {
+  "system-ui": true,
+  "ui-monospace": true,
+  "ui-sans-serif": true,
+  "ui-serif": true,
+  "ui-rounded": true,
+  "-apple-system": true,
+  blinkmacsystemfont: true,
+  "segoe ui": true,
+  roboto: true,
+  "oxygen-sans": true,
+  ubuntu: true,
+  cantarell: true,
+  "helvetica neue": true,
+  arial: true,
+  "sans-serif": true,
+  serif: true,
+  monospace: true,
+  cursive: true,
+  fantasy: true,
+};
+
+/**
+ * Build a Google Fonts stylesheet URL for a `--ks-brand-font-family-*` value,
+ * but only for a single, non-generic family name — stacks resolve locally and
+ * through next/font.
+ */
+const googleFontUrl = (
+  css: string,
+  property: string,
+): string | undefined => {
+  const family = css
+    .match(new RegExp(`${property}\\s*:\\s*"?([a-zA-Z0-9_, -]+)"?`))?.[1]
+    ?.trim();
+  if (!family || family.includes(",") || family.includes('"')) return undefined;
+  if (SYSTEM_FAMILIES[family.toLowerCase()]) return undefined;
+  return `https://fonts.googleapis.com/css2?${new URLSearchParams({ family })}`;
+};
+
 class KsDocument extends Document<any> {
   static async getInitialProps(ctx: DocumentContext) {
     let pageProps = null;
@@ -34,56 +78,22 @@ class KsDocument extends Document<any> {
       pageProps?.story?.content.token || pageProps?.settings?.token || "";
     const appliedToken = [themeCss, tokenOverrides].filter(Boolean).join("\n");
 
-    let displayFontFamilyUrl;
-    let copyFontFamilyUrl;
-    let interfaceFontFamilyUrl;
-    let monoFontFamilyUrl;
-    if (appliedToken) {
-      const displayFontFamilyName = appliedToken.match(
-        /ks-brand-font-family-display: "?([a-zA-Z0-9_,]+( [a-zA-Z0-9_,]+)*)"?/
-      )?.[1];
-      if (
-        displayFontFamilyName &&
-        !displayFontFamilyName.includes(",") &&
-        !displayFontFamilyName.includes('"')
-      ) {
-        const params = new URLSearchParams({ family: displayFontFamilyName });
-        displayFontFamilyUrl = "https://fonts.googleapis.com/css2?" + params;
-      }
-      const copyFontFamilyName = appliedToken.match(
-        /ks-brand-font-family-copy: "?([a-zA-Z0-9_,]+( [a-zA-Z0-9_,]+)*)"?/
-      )?.[1];
-      if (
-        copyFontFamilyName &&
-        !copyFontFamilyName.includes(",") &&
-        !copyFontFamilyName.includes('"')
-      ) {
-        const params = new URLSearchParams({ family: copyFontFamilyName });
-        copyFontFamilyUrl = "https://fonts.googleapis.com/css2?" + params;
-      }
-      const interfaceFontFamilyName = appliedToken.match(
-        /ks-brand-font-family-interface: "?([a-zA-Z0-9_,]+( [a-zA-Z0-9_,]+)*)"?/
-      )?.[1];
-      if (
-        interfaceFontFamilyName &&
-        !interfaceFontFamilyName.includes(",") &&
-        !interfaceFontFamilyName.includes('"')
-      ) {
-        const params = new URLSearchParams({ family: interfaceFontFamilyName });
-        interfaceFontFamilyUrl = "https://fonts.googleapis.com/css2?" + params;
-      }
-      const monoFontFamilyName = appliedToken.match(
-        /ks-brand-font-family-mono: "?([a-zA-Z0-9_,]+( [a-zA-Z0-9_,]+)*)"?/
-      )?.[1];
-      if (
-        monoFontFamilyName &&
-        !monoFontFamilyName.includes(",") &&
-        !monoFontFamilyName.includes('"')
-      ) {
-        const params = new URLSearchParams({ family: monoFontFamilyName });
-        monoFontFamilyUrl = "https://fonts.googleapis.com/css2?" + params;
-      }
-    }
+    const displayFontFamilyUrl = googleFontUrl(
+      appliedToken,
+      "ks-brand-font-family-display",
+    );
+    const copyFontFamilyUrl = googleFontUrl(
+      appliedToken,
+      "ks-brand-font-family-copy",
+    );
+    const interfaceFontFamilyUrl = googleFontUrl(
+      appliedToken,
+      "ks-brand-font-family-interface",
+    );
+    const monoFontFamilyUrl = googleFontUrl(
+      appliedToken,
+      "ks-brand-font-family-mono",
+    );
 
     const fontsWereApplied =
       displayFontFamilyUrl ||

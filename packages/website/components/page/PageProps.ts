@@ -44,10 +44,6 @@ export type HidePageBreadcrumbs = boolean;
  * Select a token theme for this page — overrides the global theme setting
  */
 export type Theme = string;
-/**
- * Hide the Book a Demo button on this page
- */
-export type HideBookADemoButton = boolean;
 
 /**
  * Abstracts a page concept into JSON schema
@@ -63,7 +59,6 @@ export interface PageProps {
    */
   seo: SeoProps;
   theme?: Theme;
-  hideBookDemoButton?: HideBookADemoButton;
 }
 /**
  * Header settings for the page

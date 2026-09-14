@@ -18,6 +18,9 @@ import { LinkProvider } from "../src/docs/LinkProvider";
 import "./preview.css";
 
 const STATIC_THEME_FILES: Record<string, string> = {
+  // The site's own brand preset (same values as the CMS token-theme story
+  // `settings/themes/tsnm` used by the website).
+  tsnm: "/tokens/branding-tokens-tsnm.css",
   blizzard: "/tokens/branding-tokens-blizzard.css",
   burgundy: "/tokens/branding-tokens-burgundy.css",
   coffee: "/tokens/branding-tokens-coffee.css",
@@ -220,7 +223,7 @@ const preview: Preview = {
     },
   ],
   initialGlobals: {
-    theme: "default",
+    theme: "tsnm",
     inverted: false,
   },
 };

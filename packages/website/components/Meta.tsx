@@ -42,6 +42,7 @@ export default function Meta({
     <Head>
       <title>{title}</title>
       <link rel="shortcut icon" href="/favicon/favicon.ico" />
+      <link rel="manifest" href="/favicon/site.webmanifest" />
       <meta name="description" content={description} />
       <meta
         name="keywords"
@@ -87,12 +88,14 @@ export default function Meta({
       )}
 
       <style>{`body { display: block !important }`}</style>
-      <script
-        defer
-        src={`https://${process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN}/script.js`}
-        data-website-id={process.env.NEXT_PUBLIC_ANALYTICS_SITE_ID}
-        data-do-not-track="true"
-      ></script>
+      {process.env.NEXT_PUBLIC_ANALYTICS_SITE_ID && (
+        <script
+          defer
+          src={`https://${process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN}/script.js`}
+          data-website-id={process.env.NEXT_PUBLIC_ANALYTICS_SITE_ID}
+          data-do-not-track="true"
+        ></script>
+      )}
       <script
         defer
         type="module"

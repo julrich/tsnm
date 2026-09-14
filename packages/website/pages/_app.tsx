@@ -33,7 +33,6 @@ import {
   LanguageProvider,
   AlternatesProvider,
 } from "@/components/LanguageContext";
-import { BookADemo } from "@/components/book-a-demo/BookADemoComponent";
 import HeaderButtonContext from "@/components/HeaderButtonContext";
 import { SettingsContext } from "@/components/SettingsContext";
 import { Section } from "@kickstartds/design-system/components/section/index.js";
@@ -151,7 +150,6 @@ export default function App({
     : footerProps?.inverted;
   const hideBreadcrumbs =
     settings?.hideBreadcrumbs || storyProps?.hidePageBreadcrumbs || false;
-  const hideBookDemoButton = storyProps?.hideBookDemoButton || false;
 
   setActiveNavItem(headerProps?.navItems, router.asPath);
 
@@ -160,7 +158,7 @@ export default function App({
     return () => router.events.off("routeChangeStart", handleRouteChange);
   }, [router.events]);
 
-  const SUPPORTED_LANGS = ["en", "de"];
+  const SUPPORTED_LANGS = ["en"];
   const url = new URL(router.asPath, "http://dummy-base");
   let pathSegments = url.pathname.split("/").filter(Boolean);
   // Strip _preview prefix (internal preview route)
@@ -298,15 +296,6 @@ export default function App({
                           }}
                         />
                       )}
-                      <BookADemo
-                        enabled={
-                          settings?.bookDemoButton_enabled &&
-                          !hideBookDemoButton
-                        }
-                        label={settings?.bookDemoButton_label}
-                        url={settings?.bookDemoButton_url}
-                        variant={settings?.bookDemoButton_variant}
-                      />
                     </ImageRatioProviders>
                   </ImageSizeProviders>
                 </ComponentProviders>

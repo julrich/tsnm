@@ -249,6 +249,13 @@ export const components = {
     ),
   ),
 
+  "track-teaser-box": editable(
+    dynamic(() =>
+      import("./track-teaser-box/TrackTeaserBoxComponent").then(
+        (mod) => mod.TrackTeaserBoxContextDefault,
+      ),
+    ),
+  ),
   "info-table": editable(
     dynamic(() =>
       import("./info-table/InfoTableComponent").then(

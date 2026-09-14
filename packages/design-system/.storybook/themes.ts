@@ -66,7 +66,7 @@ export const light = create({
   inputTextColor: componentsToHex(fg),
   inputBorderRadius: 8,
 
-  brandTitle: "Your kickstartDS Storybook",
-  brandUrl: "https://www.kickstartDS.com",
-  brandImage: "/logo.svg",
+  brandTitle: "TSNM Design System",
+  brandUrl: "https://www.tsnm.de",
+  brandImage: "/tsnm-logo.png",
 });

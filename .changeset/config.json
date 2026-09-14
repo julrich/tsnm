@@ -8,7 +8,7 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@kickstartds/ruhmesmeile-storyblok-starter",
+    "personal-site",
     "@kickstartds/design-tokens-editor",
     "@kickstartds/schema-layer-editor"
   ]

@@ -26,6 +26,9 @@
           "items": {
             "anyOf": [
               {
+                "$ref": "http://cms.mydesignsystem.com/track-teaser-box.schema.json"
+              },
+              {
                 "$ref": "http://cms.mydesignsystem.com/info-table.schema.json"
               },
               {

@@ -336,7 +336,11 @@ export async function fetchStories(
 export async function fetchPaths() {
   const { data } = await fetchStories();
   return data.stories
-    .filter((story) => story.content.component !== "settings")
+    .filter(
+      (story) =>
+        !["settings", "token-theme"].includes(story.content.component ?? "") &&
+        !story.full_slug.startsWith("settings/"),
+    )
     .map((story) => {
       const slug =
         story.full_slug === INDEX_SLUG ? [] : story.full_slug.split("/");

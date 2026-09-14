@@ -6,14 +6,17 @@
  */
 
 /**
- * Generation mode. 'section' generates editor-selected sections.
- * 'page' uses plan_page for AI-planned full-page generation.
+ * Generation mode. 'section' generates editor-selected sections via generate_section. 'page' uses plan_page → generate_section for AI-planned full-page generation.
  */
-export type PrompterMode = "section" | "page";
+export type Mode = "section" | "page";
 /**
- * @deprecated Determined by componentTypes length or plan_page. Kept for backward compat.
+ * Ordered list of component types to generate (section mode only). E.g. ['faq'] for a single section, or ['features', 'testimonials', 'cta'] for multiple. Ignored in page mode.
  */
-export type SectionCount = number;
+export type ComponentTypes = string[];
+/**
+ * Deprecated — in page mode, section count is determined by plan_page. In section mode, determined by componentTypes array length. Kept for backward compat.
+ */
+export type SectionCountDeprecated = number;
 /**
  * Whether to include the current story as main context
  */
@@ -27,25 +30,21 @@ export type UseIdea = boolean;
  */
 export type RelatedStories = string[];
 /**
- * Prompt describing the content or page intent
+ * In section mode: prompt describing the section(s) content. In page mode: intent for page planning.
  */
 export type UserPrompt = string;
 /**
- * Optional system prompt override
+ * Optional system prompt override (default: auto-generated with site context)
  */
 export type SystemPrompt = string;
-/**
- * Ordered list of component types to generate (section mode only)
- */
-export type ComponentTypes = string[];
 /**
  * Content type for generation. Auto-detected from story if not set.
  */
 export type ContentType = "page" | "blog-post" | "blog-overview";
 /**
- * Optional slug prefix filter for pattern analysis
+ * Optional slug prefix filter for pattern analysis (e.g. 'case-studies/' to match style of that section)
  */
-export type StartsWith = string;
+export type PatternSlugPrefix = string;
 /**
  * Upload generated image URLs to Storyblok CDN on save
  */
@@ -55,16 +54,15 @@ export type UploadAssets = boolean;
  * Component used to create new website content using AI prompts
  */
 export interface PrompterProps {
-  mode?: PrompterMode;
+  mode?: Mode;
   componentTypes?: ComponentTypes;
-  /** @deprecated */
-  sections?: SectionCount;
+  sections?: SectionCountDeprecated;
   includeStory?: IncludeStory;
   useIdea?: UseIdea;
   relatedStories?: RelatedStories;
   userPrompt?: UserPrompt;
   systemPrompt?: SystemPrompt;
   contentType?: ContentType;
-  startsWith?: StartsWith;
+  startsWith?: PatternSlugPrefix;
   uploadAssets?: UploadAssets;
 }

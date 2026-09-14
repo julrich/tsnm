@@ -4,8 +4,8 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "build": "pnpm -r run build",
-    "dev:web": "pnpm --filter website dev",
-    "dev:mcp": "pnpm --filter storyblok-mcp dev",
+    "dev:web": "pnpm --filter personal-site dev",
+    "dev:mcp": "pnpm --filter @kickstartds/storyblok-mcp-server dev",
     "dev:design-system": "pnpm --filter @kickstartds/design-system storybook",
     "dev:tokens-editor": "pnpm --filter @kickstartds/design-tokens-editor dev",
     "dev:component-mcp": "pnpm --filter @kickstartds/component-builder-mcp dev",
@@ -16,7 +16,7 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "publish-packages": "changeset publish",
-    "layer-editor": "bash -c 'ROOT=$PWD && LAYER=${0:-visibility} && pnpm --filter schema-layer-editor dev --schemas $ROOT/packages/website/node_modules/@kickstartds/design-system/dist/components --schemas-extra $ROOT/packages/website/components --namespace $LAYER --layer $ROOT/packages/website/cms/$LAYER'"
+    "layer-editor": "bash -c 'ROOT=$PWD && LAYER=${0:-visibility} && pnpm --filter @kickstartds/schema-layer-editor dev --schemas $ROOT/packages/website/node_modules/@kickstartds/design-system/dist/components --schemas-extra $ROOT/packages/website/components --namespace $LAYER --layer $ROOT/packages/website/cms/$LAYER'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0"

@@ -26,7 +26,7 @@ packages/
 | Package                                                  | npm                                      | Description                                                                     |
 | -------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------- |
 | [design-system](packages/design-system/)                 | `@kickstartds/design-system`             | 74+ React components, design tokens, Storybook, Playroom                        |
-| [website](packages/website/)                             | `@kickstartds/ruhmesmeile-storyblok-starter` | Next.js 13 site with Storyblok CMS, ISR, Visual Editor, AI Prompter             |
+| [website](packages/website/)                             | `personal-site` | Next.js 13 site with Storyblok CMS, ISR, Visual Editor, AI Prompter             |
 | [storyblok-services](packages/storyblok-services/)       | `@kickstartds/storyblok-services`        | Shared library for schema preparation, validation, transforms, pattern analysis |
 | [storyblok-mcp](packages/storyblok-mcp/)                 | `@kickstartds/storyblok-mcp-server`      | MCP server exposing 32 CMS/tool operations to AI assistants                     |
 | [storyblok-n8n](packages/storyblok-n8n/)                 | `n8n-nodes-storyblok-kickstartds`        | n8n community node with 28 operations across 4 resources                        |
@@ -148,7 +148,7 @@ Key capabilities:
 - **Web scraping** — fetch pages as clean Markdown for content migration
 - **Multi-content-type support** — 5 content types with per-type schema validation
 
-Deploy with Kamal: `kamal deploy -d storyblok-mcp`
+Deploy with Kamal: `kamal deploy -c config/deploy-storyblok-mcp.yml`
 
 See [packages/storyblok-mcp/README.md](packages/storyblok-mcp/README.md) for setup and deployment instructions.
 
@@ -272,8 +272,8 @@ See [docs/guides/authentication.md](docs/guides/authentication.md) for the full 
 ### Website (Kamal)
 
 ```bash
-kamal deploy -d website   # Deploy to production
-kamal setup -d website    # First-time server setup
+kamal deploy -c config/deploy-website.yml   # Deploy to production
+kamal setup -c config/deploy-website.yml    # First-time server setup
 ```
 
 Config: [config/deploy-website.yml](config/deploy-website.yml)
@@ -281,8 +281,8 @@ Config: [config/deploy-website.yml](config/deploy-website.yml)
 ### Storyblok MCP Server (Kamal)
 
 ```bash
-kamal deploy -d storyblok-mcp       # Deploy MCP server
-kamal setup -d storyblok-mcp        # First-time setup
+kamal deploy -c config/deploy-storyblok-mcp.yml       # Deploy MCP server
+kamal setup -c config/deploy-storyblok-mcp.yml        # First-time setup
 ```
 
 Config: [config/deploy-storyblok-mcp.yml](config/deploy-storyblok-mcp.yml)
@@ -290,7 +290,7 @@ Config: [config/deploy-storyblok-mcp.yml](config/deploy-storyblok-mcp.yml)
 ### Design Tokens MCP (Kamal)
 
 ```bash
-kamal deploy -d design-tokens-mcp
+kamal deploy -c config/deploy-design-tokens-mcp.yml
 ```
 
 Config: [config/deploy-design-tokens-mcp.yml](config/deploy-design-tokens-mcp.yml)
@@ -298,7 +298,7 @@ Config: [config/deploy-design-tokens-mcp.yml](config/deploy-design-tokens-mcp.ym
 ### Component Builder MCP (Kamal)
 
 ```bash
-kamal deploy -d component-builder-mcp
+kamal deploy -c config/deploy-component-builder-mcp.yml
 ```
 
 Config: [config/deploy-component-builder-mcp.yml](config/deploy-component-builder-mcp.yml)
@@ -306,7 +306,7 @@ Config: [config/deploy-component-builder-mcp.yml](config/deploy-component-builde
 ### Schema Layer Editor (Kamal)
 
 ```bash
-kamal deploy -d schema-layer-editor
+kamal deploy -c config/deploy-schema-layer-editor.yml
 ```
 
 Config: [config/deploy-schema-layer-editor.yml](config/deploy-schema-layer-editor.yml)
@@ -314,7 +314,7 @@ Config: [config/deploy-schema-layer-editor.yml](config/deploy-schema-layer-edito
 ### Design System / Storybook (Kamal)
 
 ```bash
-kamal deploy -d design-system
+kamal deploy -c config/deploy-design-system.yml
 ```
 
 Config: [config/deploy-design-system.yml](config/deploy-design-system.yml)
@@ -322,7 +322,7 @@ Config: [config/deploy-design-system.yml](config/deploy-design-system.yml)
 ### Design Tokens Editor (Kamal)
 
 ```bash
-kamal deploy -d design-tokens-editor
+kamal deploy -c config/deploy-design-tokens-editor.yml
 ```
 
 Config: [config/deploy-design-tokens-editor.yml](config/deploy-design-tokens-editor.yml) — Express serves the Vite SPA plus the `/api/tokens/*` and `/api/auth/*` routes on port 8080.
@@ -330,7 +330,7 @@ Config: [config/deploy-design-tokens-editor.yml](config/deploy-design-tokens-edi
 ### Analytics (Kamal)
 
 ```bash
-kamal deploy -d umami-analytics
+kamal deploy -c config/deploy-umami-analytics.yml
 ```
 
 Config: [config/deploy-umami-analytics.yml](config/deploy-umami-analytics.yml) — Umami + a Postgres accessory on the same host.

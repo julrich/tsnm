@@ -39,39 +39,6 @@
             }
           },
           "additionalProperties": false
-        },
-        "bookDemoButton": {
-          "type": "object",
-          "title": "Book a Demo Button",
-          "description": "Configure the fixed Book a Demo button shown on all pages",
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "title": "Enabled",
-              "description": "Show a fixed 'Book a Demo' button on all pages",
-              "default": false
-            },
-            "label": {
-              "type": "string",
-              "title": "Label",
-              "description": "Label text for the Book a Demo button",
-              "default": "Book a Demo"
-            },
-            "url": {
-              "type": "string",
-              "title": "URL",
-              "description": "URL the Book a Demo button links to",
-              "format": "uri"
-            },
-            "variant": {
-              "type": "string",
-              "title": "Variant",
-              "description": "Visual variant of the Book a Demo button",
-              "enum": ["primary", "secondary", "tertiary"],
-              "default": "primary"
-            }
-          },
-          "additionalProperties": false
         }
       }
     },
