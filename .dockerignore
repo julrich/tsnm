@@ -6,3 +6,5 @@ npm-debug.log
 **/.env.local
 **/.env.sh
 **/*.pem
+# local leaderboard of the racer — the container keeps its own in a volume
+packages/racer/data

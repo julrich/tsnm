@@ -193,6 +193,7 @@ Update domain and infra settings in these files for a new deployment target:
 | `config/deploy-design-tokens-mcp.yml`     | `DESIGN_TOKENS_MCP_PUBLIC_DOMAIN`, `HOSTING_SERVER_IP`                                  |
 | `config/deploy-component-builder-mcp.yml` | `COMPONENT_BUILDER_MCP_PUBLIC_DOMAIN`, `HOSTING_SERVER_IP`                              |
 | `config/deploy-design-system.yml`         | `STORYBOOK_PUBLIC_DOMAIN`, `HOSTING_SERVER_IP`                                          |
+| `config/deploy-racer.yml`                 | `RACER_PUBLIC_DOMAIN`, `HOSTING_SERVER_IP`, `DOCKER_RACER_IMAGE_NAME`                   |
 
 ### Deploy Commands
 
@@ -205,6 +206,10 @@ kamal deploy -c config/deploy-website.yml
 
 # MCP server
 kamal deploy -c config/deploy-storyblok-mcp.yml
+
+# LAMBDA Racer (racer.tsnm.de) — needs packages/racer/.env sourced first
+set -a && . packages/racer/.env && set +a
+kamal deploy -c config/deploy-racer.yml
 ```
 
 ---

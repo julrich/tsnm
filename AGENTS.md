@@ -54,6 +54,7 @@ Storyblok CMS ──► storyblok-services (schema, transform, validate, generat
 | `packages/token-graph` | `@kickstartds/token-graph` | private | Sigma/graphology token-graph visualization, built into design-system |
 | `packages/shared-auth` | `@kickstartds/shared-auth` | private | HS256 verification, revocation, OAuth 2.1 layer for MCP clients |
 | `packages/storyblok-*-field-plugin` | `@kickstartds/storyblok-*-field-plugin` | private | 3 Storyblok field plugins (theme select, icon sprite picker, SharePoint folder picker) |
+| `packages/racer` | `lambdaracer-server` | private | Express + socket.io multiplayer server for the LAMBDA Racer game; serves `public/` and keeps the lap-time leaderboard in a sqlite file (`node:sqlite`) |
 | `packages/umami-analytics` | — | n/a | **Not a workspace package** (no `package.json`): Dockerfile over the upstream Umami image |
 
 ## Setup
@@ -83,6 +84,7 @@ pnpm --filter @kickstartds/storyblok-mcp-server start          # MCP over stdio 
 pnpm --filter @kickstartds/design-tokens-mcp dev
 pnpm --filter @kickstartds/design-tokens-editor dev            # SPA :5173 + API :4200
 pnpm --filter @kickstartds/schema-layer-editor dev             # SPA :4200 + API :4201
+pnpm --filter lambdaracer-server start                         # LAMBDA Racer :1338
 pnpm --filter @kickstartds/schema-layer-editor dev -- --schemas packages/website/node_modules/@kickstartds/design-system/dist/components --schemas-extra packages/website/components --namespace visibility --layer packages/website/cms/visibility
 # (`pnpm layer-editor visibility` is the intended root alias for the above, but is currently broken)
 
@@ -157,7 +159,7 @@ Not every package has meaningful tests. Current state (verify before relying on 
 | `design-system` | image snapshots | `rimraf __snapshots__ && run-p -r test:*`; needs a built `storybook-static/`. CI's `build` does not produce it. |
 | `schema-layer-editor` | Vitest | 2 test files (schema tree, content-type classification). |
 | `component-builder-mcp`, `design-tokens-mcp` | none | `test` is `echo "Error: no test specified" && exit 1` — so `pnpm -r run test` can never pass. |
-| `website`, editors, field plugins, `shared-auth`, `token-graph` | none | Use `typecheck` plus a runtime smoke test. |
+| `website`, editors, field plugins, `shared-auth`, `token-graph`, `racer` | none | Use `typecheck` plus a runtime smoke test. |
 
 CI (`.github/workflows/ci.yml`) runs `install --frozen-lockfile` → `-r build` → `-r typecheck` → `-r test` → `-r lint` on **Node 20**, while `.nvmrc` and the declared engines require Node 24; `-r test`/`-r lint` are currently red for the reasons above. CircleCI (`.circleci/config.yml`) runs a bare `kamal deploy` but no `config/deploy.yml` exists (only `config/deploy-<service>.yml`) — it is stale.
 
@@ -177,14 +179,15 @@ Kamal, one config per service (`config/deploy-*.yml`), shared secrets in `.kamal
 | `kamal deploy -c config/deploy-schema-layer-editor.yml` | editor | `SCHEMA_LAYER_EDITOR_PUBLIC_DOMAIN` | 8080 | `packages/schema-layer-editor/Dockerfile` |
 | `kamal deploy -c config/deploy-design-system.yml` | Storybook | `STORYBOOK_PUBLIC_DOMAIN` | 8080 | `packages/design-system/Dockerfile` |
 | `kamal deploy -c config/deploy-umami-analytics.yml` | `analytics` | `NEXT_PUBLIC_ANALYTICS_DOMAIN` | 3000 | `packages/umami-analytics/Dockerfile` |
+| `kamal deploy -c config/deploy-racer.yml` | `racer` | `RACER_PUBLIC_DOMAIN` | 1338 | `packages/racer/Dockerfile` |
 
-Dockerfiles build workspace dependencies (shared-auth, storyblok-services, design-system) first and then re-run `pnpm install` to re-inject `dist` — `injectWorkspacePackages` snapshots workspace output at install time.
+Dockerfiles build workspace dependencies (shared-auth, storyblok-services, design-system) first and then re-run `pnpm install` to re-inject `dist` — `injectWorkspacePackages` snapshots workspace output at install time. Only `packages/racer/Dockerfile` deviates: the racer has no workspace dependency, so it installs its own package and ships the pruned `pnpm deploy` bundle.
 
 **Same rule locally:** after building a workspace package, re-run `pnpm install` before any tool that resolves it through `node_modules` — notably the website's `kickstartDS schema …` / `cms storyblok` scripts (`create-storyblok-config`, `generate-props`, `dereference-schemas`, `update-storyblok-config`). Otherwise `packages/website/node_modules/@kickstartds/design-system/dist/` does not exist yet and they fail with `Couldn't find a reffed json in json allOf graph generation`. Order: **build design-system → `pnpm install` → schema/CMS tooling → website build.**
 
 ### Local ports
 
-`3000` Next dev · `3010` website SSL proxy · `3030` website container · `5173` token editor SPA (proxies `/api` → `4200`) · `4200` token editor API **or** schema-layer-editor SPA (**collision — do not run both**) · `4201` schema-layer-editor API · `5432` Umami Postgres · `6006` Storybook (+ `/mcp`) · `8080` all hosted MCP/editor containers, field-plugin dev · `9000` Playroom.
+`3000` Next dev · `3010` website SSL proxy · `3030` website container · `1338` racer (dev + container) · `5173` token editor SPA (proxies `/api` → `4200`) · `4200` token editor API **or** schema-layer-editor SPA (**collision — do not run both**) · `4201` schema-layer-editor API · `5432` Umami Postgres · `6006` Storybook (+ `/mcp`) · `8080` all hosted MCP/editor containers, field-plugin dev · `9000` Playroom.
 
 ## Documentation map
 

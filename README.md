@@ -20,6 +20,7 @@ packages/
   schema-layer-editor/    — Schema Layer Editor (Vite SPA + Express, Kamal/Docker)
   token-graph/            — Token dependency graph visualization (sigma + graphology)
   storyblok-*-field-plugin/ — 3 Storyblok field plugins (theme select, icon sprite, SharePoint folder)
+  racer/                  — LAMBDA Racer game + multiplayer lap-time server (Express + socket.io, Kamal/Docker)
   umami-analytics/        — Umami analytics deployment (Dockerfile only, not a workspace package)
 ```
 
@@ -36,6 +37,7 @@ packages/
 | [design-tokens-editor](packages/design-tokens-editor/)   | _(private)_                              | Browser-based visual token editor with live preview (Vite + Express)            |
 | [schema-layer-editor](packages/schema-layer-editor/)     | _(private)_                              | Visual editor for JSON Schema layers (Vite SPA + Express)                       |
 | [token-graph](packages/token-graph/)                     | _(private)_                              | Token dependency graph rendering, built into the design system                  |
+| [racer](packages/racer/)                                 | `lambdaracer-server`                     | LAMBDA Racer game + multiplayer lap-time server (Express, socket.io, sqlite)    |
 
 **Package manager:** pnpm 10.30.3 · **Versioning:** [Changesets](https://github.com/changesets/changesets) for independent per-package publishing
 
@@ -334,6 +336,15 @@ kamal deploy -c config/deploy-umami-analytics.yml
 ```
 
 Config: [config/deploy-umami-analytics.yml](config/deploy-umami-analytics.yml) — Umami + a Postgres accessory on the same host.
+
+### Racer (Kamal)
+
+```bash
+set -a && . packages/website/.env.sh && . packages/racer/.env && set +a
+kamal deploy -c config/deploy-racer.yml
+```
+
+Config: [config/deploy-racer.yml](config/deploy-racer.yml) — the LAMBDA Racer on `racer.tsnm.de` (port 1338, websockets forwarded), with the leaderboard sqlite file in the `racer_data` volume. See [packages/racer/README.md](packages/racer/README.md).
 
 ## Contributing
 

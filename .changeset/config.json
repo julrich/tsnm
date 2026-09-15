@@ -10,6 +10,7 @@
   "ignore": [
     "personal-site",
     "@kickstartds/design-tokens-editor",
-    "@kickstartds/schema-layer-editor"
+    "@kickstartds/schema-layer-editor",
+    "lambdaracer-server"
   ]
 }

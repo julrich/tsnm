@@ -10,6 +10,7 @@
     "dev:tokens-editor": "pnpm --filter @kickstartds/design-tokens-editor dev",
     "dev:component-mcp": "pnpm --filter @kickstartds/component-builder-mcp dev",
     "dev:tokens-mcp": "pnpm --filter @kickstartds/design-tokens-mcp dev",
+    "dev:racer": "pnpm --filter lambdaracer-server start",
     "typecheck": "pnpm -r run typecheck",
     "lint": "pnpm -r run lint",
     "test": "pnpm -r run test",

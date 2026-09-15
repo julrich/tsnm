@@ -1,0 +1,5 @@
+node_modules
+npm-debug.log
+
+# local leaderboard — the container keeps its own (or a mounted) sqlite file
+data

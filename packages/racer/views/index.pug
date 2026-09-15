@@ -1,0 +1,80 @@
+extends layout
+
+append scripts
+  script(src='/javascripts/vendor/jquery.min.js')
+  script(src='/javascripts/jquery.color.js')
+  script(src='/socket.io/socket.io.js')
+  script(src='/javascripts/stats.js')
+  script(src='/javascripts/common.js')
+  script(src='/javascripts/script.js')
+  script(src='/javascripts/multiplayer.js')
+
+block content
+  #howto
+    div.inner
+      h1 LAMBDA Outrun Edition-Gewinnspiel
+      p
+      | So funktionierts:<br /><br />
+      | Trage oben einen Namen ein, unter dem du im Leaderboard stehst, und klicke auf "Rennen starten". Wir spammen niemanden zu, versprochen!<br />
+      | Gefahren wird mit den Pfeiltasten, falls irgendwas nicht funktioniert stellt als erstes bitte sicher das ihr einen aktuellen Browser verwendet.<br />Falls es dann immer noch nicht geht, beschwert euch bei uns auf der Pinnwand ;).<br />
+      | (Wir empfehlen Chrome: <a href="http://www.google.de/chrome/" target="_parent">http://www.google.de/chrome/</a>. Damit funktionierts bei uns!)<br />
+      | <br />Zu gewinnen gibt es folgendes:
+
+      ul
+        li Jeder der eine Zeit unter 2 Minuten fährt, hat am Samstag freien Eintritt +1!
+        li Die besten 5, die nicht unter 2 Minuten gefahren sind, bekommen auch freien Eintritt +1!
+        li Jeder bekommt ganz viel Spass ;)
+
+      p
+      | Und damit hoffen wir einfach mal das ihr mit dem kleinen Spiel genau so viel Spass habt wie wir hatten!<br /><br />
+      | Bist Samstag, Eure LAMBDA-Crew!<br />
+      | <a href="http://www.facebook.com/events/326641780751708/" target="_blank">http://www.facebook.com/events/326641780751708/</a><br /><br />
+
+      form#startform
+        input#nickname(type='text', maxlength='16', placeholder='Dein Name', autocomplete='off')
+        input#submit(type='submit', value='Rennen starten!')
+        span#start_hint
+
+  #fps(style='position: absolute; top: 0; left: 0;')
+  #wrap
+    #info
+      span Multiplayer:
+      ul
+
+    #leaderboard
+      span Leaderboard:
+      ul
+
+    #personalboard
+
+    #mute(title='Musik an/aus')
+
+    #racer
+      #hud
+        span#speed.hud
+          span#speed_value.value 0
+          |  km/h
+
+        span#current_lap_time.hud
+          |Zeit: 
+          span#current_lap_time_value.value 0.0
+
+        span#last_lap_time.hud
+          |Letzte Runde: 
+          span#last_lap_time_value.value 0.0
+
+        span#fast_lap_time.hud
+          |Beste Runde: 
+          span#fast_lap_time_value.value 0.0
+
+      canvas#canvas Sorry, leider funktioniert der LAMBDA racer bei dir nicht, weil dein Browser das &lt;canvas&gt; Element nicht unterstützt!
+      | Loading...
+
+  script(src='/javascripts/racer.js')
+  script(src='/music/dancer.js')
+  script(src='/music/beat.js')
+  script(src='/music/adapterWebkit.js')
+  script(src='/music/adapterMoz.js')
+  script(src='/music/adapterFlash.js')
+  script(src='/music/flash_detect.js')
+  script(src='/javascripts/music.js')
