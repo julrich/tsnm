@@ -99,4 +99,5 @@ Notes
   until the page got a user gesture. The speaker button next to the multiplayer
   feed switches music off - that stops the beat detection too, so the
   background stops reacting instead of just going silent.
+* Music and sprites (`public/music/`, `public/images/`) are tracked with **Git LFS**, so the repository keeps no second copy of the 18 MB of audio and art. Run `git lfs install` once per machine, otherwise a checkout - and therefore `docker build`, which copies `public/` from the working tree - sees pointer files instead of the assets. The game code in `public/javascripts/` and `public/stylesheets/` stays in plain git.
 * `public/` is the whole game, `data/` is the only state the server keeps.
