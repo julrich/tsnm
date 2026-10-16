@@ -1,0 +1,42 @@
+{
+  "classes": {
+    "generated": [
+      "pnpm-lock.yaml",
+      "packages/design-system/__snapshots__/**",
+      "packages/design-system/src/token/component-token-catalog.json",
+      "packages/design-system/src/token/semantic-token-catalog.json",
+      "packages/design-system/src/token/token-graph.json",
+      "packages/website/types/components-schema.json",
+      "packages/website/types/components-presets.json"
+    ],
+    "brand": [
+      "packages/design-system/static/**",
+      "packages/design-system/.storybook/**",
+      "packages/design-system/src/_fonts.scss",
+      "packages/design-system/src/token/fonts.css",
+      "packages/design-system/src/token/branding-tokens.json",
+      "packages/design-system/src/token/branding-tokens.css",
+      "packages/design-system/src/token/branding-tokens-*.json",
+      "packages/design-system/src/token/branding-tokens-*.css",
+      "packages/design-system/src/token/dictionary/**"
+    ],
+    "project": [
+      "packages/agent-eval/**",
+      "packages/website/**",
+      "packages/racer/**",
+      "cms/**",
+      "docs/**",
+      "package.json",
+      ".changeset/**",
+      ".kamal/**",
+      "config/**",
+      "README.md",
+      "GETTINGSTARTED.md",
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".env",
+      ".env.*",
+      ".github/workflows/publish.yml"
+    ]
+  }
+}

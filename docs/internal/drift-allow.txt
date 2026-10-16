@@ -1,0 +1,8 @@
+# Intentional divergence from the upstream: one entry per line, `<path>` TAB `<reason>`.
+#
+# A differing `shared` path listed here is reported as `allowed` and carries its reason; every other
+# differing `shared` path is `needs-triage`, which is what `--check` exits non-zero on. `docs/**` is
+# `project`-class, so this file never gates itself.
+#
+# Ships empty. Step 5's inventories fill it in, one line per difference that is deliberate and
+# permanent — with the reason, because "we meant that" is not a reason a reviewer can check.
