@@ -60,7 +60,10 @@ jobs:
           for manifest in $(git show --name-only --format='' HEAD -- 'packages/*/package.json'); do
             name=$(node -p "require('./$manifest').name")
             version=$(node -p "require('./$manifest').version")
-            rows=$(printf '%s| `%s` | %s |\n' "$rows" "$name" "$version")
+            # `+=` with an explicit newline, not `rows=$(printf …)`: command substitution strips
+            # its trailing newline, so every row used to concatenate onto one line and the PR
+            # rendered only the first package of the table.
+            rows+="| \`$name\` | $version |"$'\n'
           done
           body=$(printf 'This PR was opened by the Release workflow.\n\nMerging it records the version bumps and changelog entries on `main`.\n\n| Package | Version |\n| --- | --- |\n%s' "$rows")
 
